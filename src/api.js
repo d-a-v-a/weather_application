@@ -7,17 +7,4 @@ export class Api {
       return data;
     })
   }
-
-  // static getMap(latitude, longitude){
-  //   return fetch("https://api-maps.yandex.ru/2.1/?apikey=159985b2-7809-4064-87e3-f1839fb0a880")
-  //   .then((ymaps) => {
-  //     ymaps.ready(init);
-  //     function init(){
-  //       const myMap = new ymaps.Map("map", {
-  //         center: [55.76, 37.64],
-  //         zoom: 7
-  //       });
-  //     }
-  //   })
-  // }
 }

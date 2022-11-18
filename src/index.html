@@ -8,25 +8,29 @@
   </script>
 </head>
 <body>
+  <div class="container">
+    <div class="block1">
+      <form class="form" id="form">
+        <div class="block_input">
+          <span class="span">Широта</span>
+          <input type="text" class="input" required maxlength="8" id="latitude">
+        </div>
 
-  <form class="form" id="form">
-    <div class="block_input">
-      <span class="span">Широта</span>
-      <input type="text" class="input" required maxlength="8" id="latitude">
+        <div class="block_input">
+          <span class="span">Долгота</span>
+          <input type="text" class="input" required maxlength="8" id="longitude">
+        </div>
+        <button type="submit" class="btn" id="submit">Показать погоду</button>
+      </form>
+
+      <div class="weather" id="answer">
+        <span class="temperature"></span>
+        <span class="precipitation"></span>
+        <img src="" alt="" class="icon">
+      </div>
+
+      <div id="map" class="map"></div>
     </div>
-
-    <div class="block_input">
-      <span class="span">Долгота</span>
-      <input type="text" class="input" required maxlength="8" id="longitude">
-    </div>
-    <button type="submit" class="btn" id="submit">Показать погоду</button>
-  </form>
-
-  <div class="weather" id="answer">
-    <span class="temperature"></span>
   </div>
-
-  <div id="map" style="width: 600px; height: 400px"></div>
-
 </body>
 </html>
