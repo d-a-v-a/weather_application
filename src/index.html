@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=159985b2-7809-4064-87e3-f1839fb0a880&lang=ru_RU" type="text/javascript">
+  </script>
+</head>
+<body>
+
+  <form class="form" id="form">
+    <div class="block_input">
+      <span class="span">Широта</span>
+      <input type="text" class="input" required maxlength="8" id="latitude">
+    </div>
+
+    <div class="block_input">
+      <span class="span">Долгота</span>
+      <input type="text" class="input" required maxlength="8" id="longitude">
+    </div>
+    <button type="submit" class="btn" id="submit">Показать погоду</button>
+  </form>
+
+  <div class="weather" id="answer">
+    <span class="temperature"></span>
+  </div>
+
+  <div id="map" style="width: 600px; height: 400px"></div>
+
+</body>
+</html>
