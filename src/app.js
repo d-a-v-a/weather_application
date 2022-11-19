@@ -1,62 +1,90 @@
+import {sequence} from "./utils.js";
 import {Api} from "./api.js"
 import {isValid} from "./utils.js";
 import {getPrecipitationAndIcon} from "./utils.js";
 import "./style.css";
 
-const form = document.getElementById('form');
-const input_latitude = form.querySelector('#latitude');
-const input_longitude = form.querySelector('#longitude');
-const submitBtn = form.querySelector('#submit');
-const answer = document.querySelector(".temperature");
-const map = document.getElementById('map');
-const precipitation = document.querySelector('.precipitation')
-const icon = document.querySelector(".icon")
+const cloneBtn = document.getElementById('cloneBtn');
+const firstBlock = document.querySelector('.block1')
 
-form.addEventListener('submit', submitFormHandler);
+cloneBtn.addEventListener('click', cloneBlock);
+const generator = sequence();
 
-async function submitFormHandler(event) {
+function cloneBlock(event) {
   event.preventDefault();
-  submitBtn.disabled = true;
-  if (isValid(input_latitude.value) && isValid(input_longitude.value)) {
-    Api.getWeather(input_latitude.value, input_longitude.value)
-      .then((data) => {
-        answer.textContent = `${Math.round(data.main.temp - 273.15)}°C`
-        const precipitationAndIcon = getPrecipitationAndIcon(data.weather[0].description);
-        console.log(data.weather[0].description)
-        precipitation.textContent = precipitationAndIcon.precipitation;
-        icon.setAttribute('src', `${precipitationAndIcon.linkToImg}`)
-      })
-      .then(() => {
-        input_latitude.value = '';
-        input_longitude.value = '';
-        submitBtn.disabled = false;
-      })
-    await getMap()
+  const container = document.querySelector('.container');
+  const block = container.querySelector('.block1');
+  const cloneBlock = block.cloneNode(true);
+  const number = generator();
+  cloneBlock.querySelector('#map').id = `map${number}`
+  container.insertBefore(cloneBlock, cloneBtn);
+  BlockOperation(cloneBlock, number);
+}
+
+BlockOperation(firstBlock);
+
+function BlockOperation(block, number ='') {
+
+  const form = block.querySelector('#form');
+  const input_latitude = form.querySelector('#latitude');
+  const input_longitude = form.querySelector('#longitude');
+
+  const submitBtn = form.querySelector('#submit');
+  const answer = block.querySelector(".temperature");
+  const map = block.querySelector(`#map${number}`);
+  const precipitation = block.querySelector('.precipitation')
+  const icon = block.querySelector(".icon")
+
+  form.addEventListener('submit', submitFormHandler);
+
+  async function submitFormHandler(event) {
+    event.preventDefault();
+    submitBtn.disabled = true;
+    if (isValid(input_latitude.value, 'latitude') && isValid(input_longitude.value, 'longitude')) {
+      Api.getWeather(input_latitude.value, input_longitude.value)
+          .then((data) => {
+            answer.textContent = `${data.current.temp_c}°C`
+            const precipitationAndIcon = getPrecipitationAndIcon(data.current.condition.text);
+            precipitation.textContent = precipitationAndIcon.precipitation;
+            icon.setAttribute('src', `${precipitationAndIcon.linkToImg}`)
+          })
+          .then(() => {
+            input_latitude.value = '';
+            input_longitude.value = '';
+            submitBtn.disabled = false;
+          })
+      await getMap(number)
+    }
+
+    else {
+      answer.textContent = `Введены неверные параметры!!!`;
+
+      input_latitude.value = '';
+      input_longitude.value = '';
+      submitBtn.disabled = false;
+    }
   }
 
-  else {
-    answer.textContent = `Введены неверные параметры!!!`;
+  function getMap(number){
+    if (map) {
+      map.innerHTML = '';
+    }
+    ymaps.ready(init);
+    function init(){
+      const myMap = new ymaps.Map(`map${number}`, {
+        center: [input_latitude.value, input_longitude.value],
+        zoom: 10
+      });
+      const myPlacemark = new ymaps.Placemark([input_latitude.value, input_longitude.value], {
+        content: 'название маркера',
+        balloonContent: 'Выбранное место',
+      });
 
-    input_latitude.value = '';
-    input_longitude.value = '';
-    submitBtn.disabled = false;
+      // добавление маркера на карту
+      myMap.geoObjects.add(myPlacemark);
+    }
   }
 }
 
-function getMap(){
-  map.innerHTML = '';
-  ymaps.ready(init);
-  function init(){
-    const myMap = new ymaps.Map("map", {
-      center: [input_latitude.value, input_longitude.value],
-      zoom: 10
-    });
-    const myPlacemark = new ymaps.Placemark([input_latitude.value, input_longitude.value], {
-      content: 'название маркера',
-      balloonContent: 'Выбранное место',
-    });
 
-    // добавление маркера на карту
-    myMap.geoObjects.add(myPlacemark);
-  }
-}
+
