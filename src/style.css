@@ -8,6 +8,10 @@ html {
     box-sizing: inherit;
 }
 
+body {
+    background-color: #399cda;
+}
+
 .container {
     display: flex;
     flex-wrap: wrap;
